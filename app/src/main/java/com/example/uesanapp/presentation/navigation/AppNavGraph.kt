@@ -4,6 +4,7 @@ import androidx.compose.runtime.Composable
 import androidx.navigation.compose.NavHost
 import androidx.navigation.compose.composable
 import androidx.navigation.compose.rememberNavController
+import com.example.uesanapp.presentation.Permissions.GaleryPermissionsScreen
 import com.example.uesanapp.presentation.auth.LoginScreen
 import com.example.uesanapp.presentation.auth.RegisterScreen
 import com.example.uesanapp.presentation.home.HomeScreen
@@ -14,7 +15,7 @@ fun AppNavGraph() {
 
     NavHost(
         navController = navController,
-        startDestination = "register"
+        startDestination = "home"
     )
     {
         composable("register") { RegisterScreen(navController) }
@@ -22,6 +23,11 @@ fun AppNavGraph() {
         composable("home") {
             DrawerScaffold(navController) {
                 HomeScreen(navController)
+            }
+        }
+        composable("permissions") {
+            DrawerScaffold(navController) {
+                GaleryPermissionsScreen()
             }
         }
     }
