@@ -1,6 +1,7 @@
 package com.example.uesanapp.presentation.auth
 
 import android.R
+import android.widget.Toast
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Spacer
@@ -21,9 +22,14 @@ import androidx.compose.runtime.remember
 import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.text.input.PasswordVisualTransformation
 import androidx.compose.ui.unit.dp
 import androidx.navigation.NavController
+import com.example.uesanapp.data.remote.FirebaseAuthManager
+import kotlinx.coroutines.CoroutineScope
+import kotlinx.coroutines.Dispatchers
+import kotlinx.coroutines.launch
 
 @Composable
 fun RegisterScreen(navController: NavController) {
@@ -31,6 +37,8 @@ fun RegisterScreen(navController: NavController) {
     var name by remember { mutableStateOf("") }
     var password by remember { mutableStateOf("") }
     var confirmPassword by remember { mutableStateOf("") }
+
+    val context = LocalContext.current
 
     Column(
         modifier = Modifier
@@ -86,8 +94,20 @@ fun RegisterScreen(navController: NavController) {
                         && password.isNotBlank()
                         && password == confirmPassword)
                 {
-                    navController.navigate("login")
+                    CoroutineScope(Dispatchers.Main).launch {
+                        val result = FirebaseAuthManager.registerUser(name, email, password)
+                        if (result.isSuccess) {
+                            // Registro exitoso, navegar a la pantalla de inicio
+                            navController.navigate("login")
+                        } else {
+                            // Manejar error de registro (mostrar mensaje, etc.)
+                            val error = result.exceptionOrNull()?.message ?: "Error Desconocido"
+                            Toast
+                                .makeText(context, error, Toast.LENGTH_SHORT).show()
+                        }
+                    }
                 }
+                //navController.navigate("home")
             },
             modifier = Modifier.fillMaxWidth()
         ) {

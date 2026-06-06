@@ -1,5 +1,6 @@
 package com.example.uesanapp.presentation.auth
 
+import android.widget.Toast
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Spacer
@@ -19,13 +20,20 @@ import androidx.compose.runtime.remember
 import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.unit.dp
 import androidx.navigation.NavController
+import com.example.uesanapp.data.remote.FirebaseAuthManager
+import kotlinx.coroutines.CoroutineScope
+import kotlinx.coroutines.Dispatchers
+import kotlinx.coroutines.launch
 
 @Composable
 fun LoginScreen(navController: NavController) {
     var email by remember { mutableStateOf("") }
     var password by remember { mutableStateOf("") }
+
+    val context = LocalContext.current
 
     Column(
         //modifier = Modifier.padding(16.dp)
@@ -58,11 +66,19 @@ fun LoginScreen(navController: NavController) {
         Button (
             onClick = {
                 if(email.isNotBlank() && password.isNotBlank()) {
-                    // Aquí iría la lógica de autenticación
-                    navController.navigate("home")
-                } else {
-                    // Mostrar mensaje de error o validación
-                }
+                        CoroutineScope(Dispatchers.Main).launch {
+                            val result = FirebaseAuthManager.loginUser(email, password)
+                            if (result.isSuccess) {
+                                // Registro exitoso, navegar a la pantalla de inicio
+                                navController.navigate("home")
+                            } else {
+                                // Manejar error de registro (mostrar mensaje, etc.)
+                                val error = result.exceptionOrNull()?.message ?: "Error Desconocido"
+                                Toast
+                                    .makeText(context, error, Toast.LENGTH_SHORT).show()
+                            }
+                        }
+                    }
             },
             modifier = Modifier.fillMaxWidth()
         ) {

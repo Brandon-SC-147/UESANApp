@@ -1,0 +1,29 @@
+{
+  "project_info": {
+    "project_number": "615721202215",
+    "project_id": "valenzuela-uesan-202601",
+    "storage_bucket": "valenzuela-uesan-202601.firebasestorage.app"
+  },
+  "client": [
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:615721202215:android:08ddc114000b991fe55402",
+        "android_client_info": {
+          "package_name": "com.example.uesanapp"
+        }
+      },
+      "oauth_client": [],
+      "api_key": [
+        {
+          "current_key": "AIzaSyA24MH4KYxivhu8KxNJumykK9X7o4UbPCA"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": []
+        }
+      }
+    }
+  ],
+  "configuration_version": "1"
+}

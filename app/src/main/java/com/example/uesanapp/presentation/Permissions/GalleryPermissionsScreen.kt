@@ -71,7 +71,8 @@ fun GaleryPermissionsScreen(){
                 }
             }
         ){
-            Text("Seleccionar Imagen")
+            Text("" +
+                    ".0 Imagen")
         }
         selectedImageUri?.let{
             Spacer(modifier = Modifier.height( 20.dp))
