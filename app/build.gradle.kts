@@ -3,6 +3,7 @@ plugins {
     alias(libs.plugins.kotlin.compose)
     // Add the Google services Gradle plugin
     id("com.google.gms.google-services")
+    id("com.google.devtools.ksp")
 }
 
 android {
@@ -66,7 +67,11 @@ dependencies {
     implementation("io.coil-kt.coil3:coil-compose:3.4.0")
     implementation("io.coil-kt.coil3:coil-network-okhttp:3.4.0")
     //Icons
-    implementation("androidx.compose.material:material-icons-core:1.7.8") // or latest version
+    implementation("androidx.compose.material:material-icons-core:1.7.8")
+    //Room
+    implementation(libs.room.runtime)
+    implementation(libs.room.ktx)
+    ksp(libs.room.compiler)
     // Import the Firebase BoM
     implementation(platform("com.google.firebase:firebase-bom:34.14.0"))
     // Add the dependency for the Firebase Analytics library
