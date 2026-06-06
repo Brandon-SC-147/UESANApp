@@ -29,8 +29,11 @@ import androidx.compose.material3.Surface
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.LaunchedEffect
+import androidx.compose.runtime.collectAsState
+import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
+import androidx.compose.runtime.rememberCoroutineScope
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
@@ -43,8 +46,11 @@ import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import androidx.navigation.NavController
 import coil3.compose.rememberAsyncImagePainter
+import com.example.uesanapp.data.local.FavoriteCountry
+import com.example.uesanapp.data.local.FavoritesManager
 import com.example.uesanapp.data.model.CountryModel
 import kotlinx.coroutines.delay
+import kotlinx.coroutines.launch
 
 val mockCountries = listOf(
     CountryModel("Argentina", 1, "https://flagcdn.com/w320/ar.png"),
@@ -60,6 +66,9 @@ val mockCountries = listOf(
 @Composable
 fun HomeScreen(navController: NavController) {
     val visibleItems = remember { mutableStateOf(setOf<Int>()) }
+    val favorites by FavoritesManager.getAllFavorites().collectAsState(initial = emptyList())
+    val favoriteNames = remember(favorites) { favorites.map { it.name }.toSet() }
+    val scope = rememberCoroutineScope()
 
     LaunchedEffect(Unit) {
         mockCountries.forEachIndexed { index, _ ->
@@ -186,7 +195,17 @@ fun HomeScreen(navController: NavController) {
                     ) {
                         CountryRankingCard(
                             country = country,
-                            ranking = country.ranking
+                            ranking = country.ranking,
+                            isFavorite = country.name in favoriteNames,
+                            onFavoriteClick = {
+                                scope.launch {
+                                    if (country.name in favoriteNames) {
+                                        FavoritesManager.delete(FavoriteCountry(country.name, country.ranking, country.imageUrl))
+                                    } else {
+                                        FavoritesManager.insert(FavoriteCountry(country.name, country.ranking, country.imageUrl))
+                                    }
+                                }
+                            }
                         )
                     }
                 }
@@ -196,7 +215,7 @@ fun HomeScreen(navController: NavController) {
 }
 
 @Composable
-fun CountryRankingCard(country: CountryModel, ranking: Int) {
+fun CountryRankingCard(country: CountryModel, ranking: Int, isFavorite: Boolean, onFavoriteClick: () -> Unit) {
     val medalColor = when (ranking) {
         1 -> Color(0xFFFFD700)  // Gold
         2 -> Color(0xFFC0C0C0)  // Silver
@@ -333,6 +352,21 @@ fun CountryRankingCard(country: CountryModel, ranking: Int) {
                             else -> "🥉"
                         },
                         fontSize = 24.sp
+                    )
+                }
+
+                Spacer(modifier = Modifier.size(8.dp))
+                Box(
+                    modifier = Modifier
+                        .size(36.dp)
+                        .clip(CircleShape)
+                        .clickable { onFavoriteClick() },
+                    contentAlignment = Alignment.Center
+                ) {
+                    Text(
+                        text = if (isFavorite) "♥" else "♡",
+                        fontSize = 22.sp,
+                        color = if (isFavorite) Color(0xFFFF4444) else Color(0xFF666666)
                     )
                 }
             }

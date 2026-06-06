@@ -13,6 +13,7 @@ import androidx.compose.runtime.Composable
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.tooling.preview.Preview
+import com.example.uesanapp.data.local.FavoritesManager
 import com.example.uesanapp.presentation.auth.LoginScreen
 import com.example.uesanapp.presentation.navigation.AppNavGraph
 import com.example.uesanapp.ui.theme.UESANAppTheme
@@ -20,6 +21,7 @@ import com.example.uesanapp.ui.theme.UESANAppTheme
 class MainActivity : ComponentActivity() {
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
+        FavoritesManager.init(this)
         enableEdgeToEdge()
         setContent {
             UESANAppTheme {

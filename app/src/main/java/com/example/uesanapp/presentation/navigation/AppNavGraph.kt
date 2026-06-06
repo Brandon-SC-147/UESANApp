@@ -7,6 +7,7 @@ import androidx.navigation.compose.rememberNavController
 import com.example.uesanapp.presentation.Permissions.GaleryPermissionsScreen
 import com.example.uesanapp.presentation.auth.LoginScreen
 import com.example.uesanapp.presentation.auth.RegisterScreen
+import com.example.uesanapp.presentation.favorites.FavoritesScreen
 import com.example.uesanapp.presentation.home.HomeScreen
 
 @Composable
@@ -28,6 +29,11 @@ fun AppNavGraph() {
         composable("permissions") {
             DrawerScaffold(navController) {
                 GaleryPermissionsScreen()
+            }
+        }
+        composable("favorites") {
+            DrawerScaffold(navController) {
+                FavoritesScreen(navController)
             }
         }
     }
