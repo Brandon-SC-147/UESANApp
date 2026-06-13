@@ -68,6 +68,14 @@ fun DrawerScaffold(
                         navHostController.navigate("favorites")
                     }
                 )
+                //ApiFootball
+                NavigationDrawerItem(
+                    label = { Text("ApiFootball") },
+                    selected = false,
+                    onClick = {
+                        navHostController.navigate("apiFootball")
+                    }
+                )
                 //Logout
                 NavigationDrawerItem(
                     label = { Text("Logout") },
